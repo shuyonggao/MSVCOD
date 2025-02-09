@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSVCOD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9e9e9; 
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%; 
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 70px; 
+        }
+        .header-image {
+            width: 100%;
+            height: auto;
+        }
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #ccc;
+            margin: 20px 0; 
+        }
+        .description {
+            text-align: center;
+            font-size: 16px;
+            color: #000000;
+            margin: 40px 0 40px; 
+        }
+        .video-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            grid-template-rows: repeat(4, auto);  
+            gap: 20px;
+        }
+        .video-item {
+            background-color: #fff; 
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .video-item h3 {
+            font-size: 16px;
+            margin: 10px 0 0;
+            text-align: center;
+        }
+        .video-item p {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .pagination button.disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MSVCOD:A Large-Scale Multi-Scene Dataset for Video Camouflage Object Detection</h1>
+        <img src="resources/overview.png" alt="Header Image" class="header-image">
+        <div class="divider"></div>
+        <div class="description">The following videos are some examples from our dataset:</div>
+        <div class="video-list" id="videoList">
+            
+        </div>
+        <div class="pagination" id="pagination">
+            
+        </div>
+    </div>
+
+    <script>
+        const videos = [
+        { title: "Artificial-Human-Artist-15", description: "", src: "resources/Artificial-Human-Artist-15.webm" },
+        { title: "Aquatic-Animal-Leptocephalus-01", description: "", src: "resources/Aquatic-Animal-Leptocephalus-01.webm" },
+        { title: "Artificial-Human-Artist-04", description: "", src: "resources/Artificial-Human-Artist-04.webm" },
+        { title: "Jungle-Animal-Chameleon-02", description: "", src: "resources/Jungle-Animal-Chameleon-02.webm" },
+        { title: "Aquatic-Animal-Seahorse-02", description: "", src: "resources/Aquatic-Animal-Seahorse-02.webm" },
+        { title: "Snowfield-Human-Soldier-03", description: "", src: "resources/Snowfield-Human-Soldier-03.webm" },
+        { title: "Field-Human-Artist-01", description: "", src: "resources/Field-Human-Artist-01.webm" },
+        { title: "Desert-Animal-Elephant-01", description: "", src: "resources/Desert-Animal-Elephant-01.webm" },
+        { title: "Jungle-Vehicle-Tank-01", description: "", src: "resources/Jungle-Vehicle-Tank-01.webm" },
+        { title: "Snowfield-Animal-Arcticfox-07", description: "", src: "resources/Snowfield-Animal-Arcticfox-07.webm" },
+        { title: "Desert-Human-Soldier-07", description: "", src: "resources/Desert-Human-Soldier-07.webm" },
+        { title: "Field-Animal-Snake-03", description: "", src: "resources/Field-Animal-Snake-03.webm" },
+
+        { title: "Artificial-Human-Artist-01", description: "", src: "resources/Artificial-Human-Artist-01.webm" },
+        { title: "Desert-Animal-Snake-05", description: "", src: "resources/Desert-Animal-Snake-05.webm" },
+        { title: "Desert-Animal-Lizard-05", description: "", src: "resources/Desert-Animal-Lizard-05.webm" },
+        { title: "Jungle-Human-Soldier-10", description: "", src: "resources/Jungle-Human-Soldier-10.webm" },
+        { title: "Artificial-Human-Artist-09", description: "", src: "resources/Artificial-Human-Artist-09.webm" },
+        { title: "Desert-Animal-Lizard-02", description: "", src: "resources/Desert-Animal-Lizard-02.webm" },
+        { title: "Jungle-Animal-Potoo-01", description: "", src: "resources/Jungle-Animal-Potoo-01.webm" },
+        { title: "Snowfield-Animal-Polarbear-02", description: "", src: "resources/Snowfield-Animal-Polarbear-02.webm" },
+        { title: "Desert-Animal-Lizard-01", description: "", src: "resources/Desert-Animal-Lizard-01.webm" },
+        { title: "Snowfield-Animal-Polarbear-01", description: "", src: "resources/Snowfield-Animal-Polarbear-01.webm" },
+        { title: "Jungle-Animal-Mantis-01", description: "", src: "resources/Jungle-Animal-Mantis-01.webm" },
+        { title: "Desert-Human-Soldier-06", description: "", src: "resources/Desert-Human-Soldier-06.webm" },
+        { title: "Desert-Animal-Snake-01", description: "", src: "resources/Desert-Animal-Snake-01.webm" },
+        { title: "Field-Human-Soldier-01", description: "", src: "resources/Field-Human-Soldier-01.webm" },
+        { title: "Aquatic-Animal-Flatfish-03", description: "", src: "resources/Aquatic-Animal-Flatfish-03.webm" },
+        { title: "Field-Vehicle-Tank-01", description: "", src: "resources/Field-Vehicle-Tank-01.webm" },
+        { title: "Artificial-Human-Artist-13", description: "", src: "resources/Artificial-Human-Artist-13.webm" },
+        { title: "Snowfield-Animal-Owl-02", description: "", src: "resources/Snowfield-Animal-Owl-02.webm" },
+        { title: "Snowfield-Animal-Owl-01", description: "", src: "resources/Snowfield-Animal-Owl-01.webm" },
+        { title: "Medical-Medical-Polyp-01", description: "", src: "resources/Medical-Medical-Polyp-01.webm" },
+        { title: "Aquatic-Animal-Seahorse-05", description: "", src: "resources/Aquatic-Animal-Seahorse-05.webm" },
+        { title: "Desert-Animal-Frog-01", description: "", src: "resources/Desert-Animal-Frog-01.webm" },
+        { title: "Jungle-Human-Artist-01", description: "", src: "resources/Jungle-Human-Artist-01.webm" },
+        { title: "Aquatic-Animal-Flatfish-02", description: "", src: "resources/Aquatic-Animal-Flatfish-02.webm" },
+        { title: "Snowfield-Animal-Penguin-01", description: "", src: "resources/Snowfield-Animal-Penguin-01.webm" },
+        { title: "Jungle-Animal-Lizard-01", description: "", src: "resources/Jungle-Animal-Lizard-01.webm" },
+        { title: "Snowfield-Animal-Arcticfox-04", description: "", src: "resources/Snowfield-Animal-Arcticfox-04.webm" },
+        { title: "Desert-Animal-Snake-03", description: "", src: "resources/Desert-Animal-Snake-03.webm" },
+        { title: "Jungle-Animal-Owl-01", description: "", src: "resources/Jungle-Animal-Owl-01.webm" },
+        { title: "Aquatic-Animal-Leptocephalus-03", description: "", src: "resources/Aquatic-Animal-Leptocephalus-03.webm" },
+        { title: "Aquatic-Animal-Octopus-03", description: "", src: "resources/Aquatic-Animal-Octopus-03.webm" },
+        { title: "Jungle-Animal-Phyllium-02", description: "", src: "resources/Jungle-Animal-Phyllium-02.webm" },
+        { title: "Aquatic-Animal-Octopus-05", description: "", src: "resources/Aquatic-Animal-Octopus-05.webm" },
+        { title: "Jungle-Animal-Spider-01", description: "", src: "resources/Jungle-Animal-Spider-01.webm" },
+        { title: "Jungle-Human-Soldier-12", description: "", src: "resources/Jungle-Human-Soldier-12.webm" },
+        { title: "Artificial-Human-Artist-10", description: "", src: "resources/Artificial-Human-Artist-10.webm" },
+        { title: "Aquatic-Animal-Octopus-04", description: "", src: "resources/Aquatic-Animal-Octopus-04.webm" },
+        { title: "Aquatic-Animal-Octopus-01", description: "", src: "resources/Aquatic-Animal-Octopus-01.webm" },
+        { title: "Jungle-Animal-Katydid-03", description: "", src: "resources/Jungle-Animal-Katydid-03.webm" },
+        { title: "Desert-Human-Soldier-02", description: "", src: "resources/Desert-Human-Soldier-02.webm" },
+        { title: "Jungle-Animal-StickBug-01", description: "", src: "resources/Jungle-Animal-StickBug-01.webm" },
+        { title: "Jungle-Animal-Iguana-01", description: "", src: "resources/Jungle-Animal-Iguana-01.webm" },
+        { title: "Snowfield-Animal-Arcticfox-05", description: "", src: "resources/Snowfield-Animal-Arcticfox-05.webm" },
+        { title: "Field-Animal-Leopard-02", description: "", src: "resources/Field-Animal-Leopard-02.webm" },
+        { title: "Jungle-Animal-Katydid-01", description: "", src: "resources/Jungle-Animal-Katydid-01.webm" },
+        { title: "Snowfield-Human-Soldier-09", description: "", src: "resources/Snowfield-Human-Soldier-09.webm" },
+        { title: "Jungle-Animal-Potoo-03", description: "", src: "resources/Jungle-Animal-Potoo-03.webm" },
+        { title: "Desert-Animal-Snake-06", description: "", src: "resources/Desert-Animal-Snake-06.webm" },
+        
+        ];
+
+        const itemsPerPage = 12; 
+        let currentPage = 1;
+        const videoList = document.getElementById('videoList');
+        const pagination = document.getElementById('pagination');
+
+        function renderVideos(page) {
+            videoList.innerHTML = '';
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageVideos = videos.slice(start, end);
+
+            pageVideos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="${video.src}" type="video/webm">
+                            Your browser does not support video tags.
+                        </video>
+                    </div>
+                    <h3>${video.title}</h3>
+                    <p>${video.description}</p>
+                `;
+                videoList.appendChild(videoItem);
+            });
+        }
+
+        function renderPagination() {
+            pagination.innerHTML = '';
+            const totalPages = Math.ceil(videos.length / itemsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.innerText = i;
+                button.classList.toggle('disabled', i === currentPage);
+                button.addEventListener('click', () => {
+                    currentPage = i;
+                    renderVideos(currentPage);
+                    renderPagination();
+                });
+                pagination.appendChild(button);
+            }
+        }
+
+        renderVideos(currentPage);
+        renderPagination();
+    </script>
+</body>
+</html>
